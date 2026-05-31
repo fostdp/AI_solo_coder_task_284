@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纸飞机空气动力学设计 - 专业版</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✈️ 纸飞机空气动力学设计</h1>
+            <p>选择折法模板、调整材料参数、挑战设计比赛！</p>
+        </header>
+
+        <div class="main-content">
+            <div class="design-panel">
+                <h2>📐 设计参数</h2>
+                
+                <div class="input-group">
+                    <label for="designName">设计名称:</label>
+                    <input type="text" id="designName" placeholder="给你的纸飞机起个名字">
+                </div>
+
+                <div class="input-group">
+                    <label>折法模板:</label>
+                    <div class="fold-templates">
+                        <button class="fold-btn active" data-fold="dart" title="经典飞镖型 - 速度快">
+                            <span class="fold-icon">🗡️</span>
+                            <span class="fold-name">飞镖型</span>
+                        </button>
+                        <button class="fold-btn" data-fold="glider" title="滑翔机型 - 滞空久">
+                            <span class="fold-icon">🪂</span>
+                            <span class="fold-name">滑翔机</span>
+                        </button>
+                        <button class="fold-btn" data-fold="stunt" title="特技型 - 可回旋">
+                            <span class="fold-icon">🔄</span>
+                            <span class="fold-name">特技型</span>
+                        </button>
+                        <button class="fold-btn" data-fold="stealth" title="隐身型 - 风阻小">
+                            <span class="fold-icon">👻</span>
+                            <span class="fold-name">隐身型</span>
+                        </button>
+                        <button class="fold-btn" data-fold="worldrecord" title="世界纪录型">
+                            <span class="fold-icon">🏆</span>
+                            <span class="fold-name">纪录型</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>纸张材料 (克重):</label>
+                    <div class="paper-materials">
+                        <button class="paper-btn" data-weight="60">
+                            <span class="paper-name">60g</span>
+                            <span class="paper-desc">轻薄</span>
+                        </button>
+                        <button class="paper-btn active" data-weight="80">
+                            <span class="paper-name">80g</span>
+                            <span class="paper-desc">标准</span>
+                        </button>
+                        <button class="paper-btn" data-weight="100">
+                            <span class="paper-name">100g</span>
+                            <span class="paper-desc">厚重</span>
+                        </button>
+                        <button class="paper-btn" data-weight="120">
+                            <span class="paper-name">120g</span>
+                            <span class="paper-desc">超厚</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="sweepAngle">机翼后掠角: <span id="sweepAngleValue">30</span>°</label>
+                    <input type="range" id="sweepAngle" min="0" max="60" value="30">
+                    <div class="param-desc">后掠角越大，高速性能越好，但低速升力下降</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="wingSpan">翼展: <span id="wingSpanValue">15</span> cm</label>
+                    <input type="range" id="wingSpan" min="5" max="25" value="15">
+                    <div class="param-desc">翼展越大，升力越大，但阻力也增加</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="centerOfGravity">重心位置: <span id="centerOfGravityValue">50</span>%</label>
+                    <input type="range" id="centerOfGravity" min="30" max="70" value="50">
+                    <div class="param-desc">从机头算起的重心位置，影响稳定性</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="windStrength">风况条件:</label>
+                    <select id="windStrength" class="select-input">
+                        <option value="calm">🌤️ 无风 (平静)</option>
+                        <option value="light">🌬️ 微风</option>
+                        <option value="moderate" selected>💨 中等风力</option>
+                        <option value="strong">🌪️ 强风 (挑战)</option>
+                    </select>
+                    <div class="param-desc">影响湍流和侧风的强度</div>
+                </div>
+
+                <div class="button-group">
+                    <button id="windTunnelBtn" class="btn btn-primary">🌬️ 风洞测试</button>
+                    <button id="flyBtn" class="btn btn-success">🚀 开始试飞</button>
+                    <button id="saveBtn" class="btn btn-secondary">💾 保存设计</button>
+                    <button id="shareBtn" class="btn btn-share">🔗 分享设计</button>
+                </div>
+            </div>
+
+            <div class="simulation-panel">
+                <h2>🌀 模拟区域</h2>
+                <div class="canvas-container">
+                    <canvas id="simulationCanvas" width="500" height="400"></canvas>
+                    <div id="modeIndicator" class="mode-indicator">设计模式</div>
+                    <div id="windIndicator" class="wind-indicator">
+                        <span class="wind-icon">➡️</span>
+                        <span class="wind-text">侧风</span>
+                    </div>
+                </div>
+
+                <div class="results-panel">
+                    <div class="result-item">
+                        <span class="result-label">升阻比:</span>
+                        <span id="liftToDragRatio" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">稳定性:</span>
+                        <span id="stability" class="result-value">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">飞行距离:</span>
+                        <span id="distance" class="result-value">-</span> m
+                    </div>
+                </div>
+
+                <div class="flight-stats" id="flightStats" style="display: none;">
+                    <h3>📊 飞行数据</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">最大高度:</span>
+                            <span id="maxHeight" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">平均速度:</span>
+                            <span id="avgSpeed" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">滑翔比:</span>
+                            <span id="glideRatio" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">受风影响:</span>
+                            <span id="windEffect" class="stat-value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leaderboard-panel">
+                <div class="tab-container">
+                    <button class="tab-btn active" data-tab="leaderboard">🏆 排行榜</button>
+                    <button class="tab-btn" data-tab="competitions">🎯 设计比赛</button>
+                </div>
+
+                <div id="leaderboardTab" class="tab-content">
+                    <div id="leaderboard" class="leaderboard-list">
+                        <div class="loading">加载中...</div>
+                    </div>
+                    <button id="refreshLeaderboard" class="btn btn-small">🔄 刷新</button>
+                </div>
+
+                <div id="competitionsTab" class="tab-content" style="display: none;">
+                    <div class="competition-create">
+                        <h4>创建比赛</h4>
+                        <input type="text" id="competitionName" placeholder="比赛名称" class="small-input">
+                        <button id="createCompetitionBtn" class="btn btn-small btn-primary">➕ 创建比赛</button>
+                    </div>
+                    
+                    <div class="competition-list" id="competitionList">
+                        <div class="loading">加载中...</div>
+                    </div>
+
+                    <div class="competition-detail" id="competitionDetail" style="display: none;">
+                        <h4 id="currentCompetitionName">比赛详情</h4>
+                        <div id="competitionLeaderboard" class="leaderboard-list"></div>
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button id="joinCompetitionBtn" class="btn btn-small btn-success" style="flex: 1;">🏅 参加比赛</button>
+                            <button id="refreshCompetitionRank" class="btn btn-small" style="flex: 1;">🔄 刷新排名</button>
+                        </div>
+                        <button id="backToListBtn" class="btn btn-small" style="width: 100%;">⬅️ 返回列表</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>🔗 分享你的设计</h2>
+            <p>复制以下链接分享给好友：</p>
+            <div class="share-link-container">
+                <input type="text" id="shareLink" readonly>
+                <button id="copyLinkBtn" class="btn btn-small">📋 复制</button>
+            </div>
+            <div class="share-social">
+                <p>或者分享到：</p>
+                <button class="social-btn">📱 微信</button>
+                <button class="social-btn">🐦 微博</button>
+                <button class="social-btn">📧 邮件</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="competitionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-competition">&times;</span>
+            <h2>🏅 参加比赛</h2>
+            <div class="input-group">
+                <label for="playerName">玩家昵称:</label>
+                <input type="text" id="playerName" placeholder="输入你的昵称">
+            </div>
+            <p>当前设计距离: <span id="currentDistance">0</span>m</p>
+            <button id="confirmJoinBtn" class="btn btn-success">确认参赛</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

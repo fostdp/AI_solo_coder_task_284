@@ -1,0 +1,20 @@
+{
+  "name": "paper-plane-aerodynamics",
+  "version": "1.0.0",
+  "description": "纸飞机空气动力学设计游戏",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node test/aerodynamics.test.js",
+    "test:aero": "node test/aerodynamics.test.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6",
+    "cors": "^2.8.5"
+  },
+  "keywords": ["paper-plane", "aerodynamics", "game", "vortex-lattice-method", "flight-simulation"],
+  "author": "",
+  "license": "MIT"
+}
